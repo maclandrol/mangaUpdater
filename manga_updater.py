@@ -1,3 +1,9 @@
+"""
+Copyright (C) 2014 Emmanuel Noutahi
+Please don't change the original Copyright when you modify the program
+
+"""
+
 from urllib2 import  Request, urlopen
 import sqlite3 as lite
 import os.path, getopt, sys, json,smtplib
