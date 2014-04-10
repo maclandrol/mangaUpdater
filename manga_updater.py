@@ -9,25 +9,26 @@ import sqlite3 as lite
 import os.path, getopt, sys, json,smtplib
 from pprint import pprint
 
+#You can change this as you want!!
+API_BASE = "https://www.mangaeden.com/api/"
+IMG_BASE = "http://cdn.mangaeden.com/mangasimg/"
+BASE_DIR = os.path.expanduser("~/Mangas/") #manga directory
+DATA_DIR = os.path.expanduser("~/.mangas/") #directory for private data
 
-api_base = "https://www.mangaeden.com/api/"
-img_base = "http://cdn.mangaeden.com/mangasimg/"
-base_dir = os.path.expanduser("~/Mangas/") #manga directory
-data_dir = os.path.expanduser("~/.mangas/") #directory for private data
 table ="myMangas" #manga table name
 my_mail="emmanuel.noutahi@gmail.com" #mail to receive notification
 
 
 def update_manga_list():
-	'''update current manga_list and save to data_dir, this take some time'''
-	d= os.path.dirname(data_dir)
+	'''update current manga_list and save to DATA_DIR, this take some time'''
+	d= os.path.dirname(DATA_DIR)
 	if not os.path.exists(d):
-		os.makedirs(data_dir)
+		os.makedirs(DATA_DIR)
 
-	jsonfile=data_dir+"manga_list.json"
+	jsonfile=DATA_DIR+"manga_list.json"
 	if not os.path.exists(jsonfile):
-		manga_list= getJson(api_base+"list/0/")
-		with open(data_dir+"manga_list.json", 'w+') as file:
+		manga_list= getJson(API_BASE+"list/0/")
+		with open(DATA_DIR+"manga_list.json", 'w+') as file:
 			json.dump(manga_list, file)
 
 
@@ -57,7 +58,7 @@ def update_manga(manga_id=None, get_current_chap=0, notify=None):
 	'''Update the list of manga i'm following and download the latest release if possible.
 	with get_current_chap,  get the current chapter and save to a directory named 'latest
 	with notify, send notification using a function '''
-	con= lite.connect(data_dir+"mangas.db")
+	con= lite.connect(DATA_DIR+"mangas.db")
 	manga_updated=[]
 	with con:
 		cur=con.cursor()
@@ -100,7 +101,7 @@ def download_manga(manga_id, manga_base_dir, chap_start=1, chap_end=None):
 def get_manga_info(manga_id):
 	'''return manga info in a tuple (for insertion in database)'''
 
-	manga_json=getJson(api_base+"manga/"+manga_id)
+	manga_json=getJson(API_BASE+"manga/"+manga_id)
 	title= manga_json["title"]
 	artist=manga_json["artist"]
 	author= manga_json["author"]
@@ -109,7 +110,7 @@ def get_manga_info(manga_id):
 	chapters= manga_json["chapters"]
 	if(len(chapters)>0):
 		last_chapter=chapters[0][0]
-	image=img_base+manga_json["image"]
+	image=IMG_BASE+manga_json["image"]
 	last_update= manga_json["last_chapter_date"]
 	years=0
 	if(manga_json["released"]):
@@ -125,7 +126,7 @@ def search_manga(manga_name, best_match=1):
 	matching_manga=[]
 	max_hit_pos=-1
 	max_hit=-1
-	with open(data_dir+"manga_list.json") as json_data:
+	with open(DATA_DIR+"manga_list.json") as json_data:
 		manga_json=json.load(json_data)
 		manga_list= manga_json["manga"]
 		i=0;
@@ -143,11 +144,11 @@ def search_manga(manga_name, best_match=1):
 
 def add_manga(manga_info=None, manga_id=None):
 	'''add_manga to database'''
-	con= lite.connect(data_dir+"mangas.db")
+	con= lite.connect(DATA_DIR+"mangas.db")
 	if manga_info is None and manga_id is not None:
 		manga_info=get_manga_info(manga_id)
 
-	chap_dir=base_dir+manga_info[1]+"/"
+	chap_dir=BASE_DIR+manga_info[1]+"/"
 	if not os.path.exists(chap_dir):
 		os.makedirs(chap_dir)
 	with con:
@@ -162,7 +163,7 @@ def add_manga(manga_info=None, manga_id=None):
 
 def get_manga_chapter_id(manga_id, chapter=None):
 	'''Get manga chapter id '''
-	manga_json= getJson(api_base+"manga/"+manga_id)
+	manga_json= getJson(API_BASE+"manga/"+manga_id)
 	chapter_id=None
 	if(manga_json):
 		chapters= manga_json["chapters"]
@@ -186,7 +187,7 @@ def get_chapter_info(chapter_id):
 	'''Get chapter informations (images) in json format'''
 	chapter_json=None
 	if(chapter_id is not None):
-		chapter_json=getJson(api_base+"chapter/"+chapter_id)
+		chapter_json=getJson(API_BASE+"chapter/"+chapter_id)
 
 	return chapter_json
 
@@ -203,14 +204,14 @@ def save_chapter_to(dir_name, chapter_json):
 		for image in images:
 			ext=image[1].split('.')[1]
 			with open(dir_name+str(image[0])+"."+ext, "w+") as pic:
-				pic.write(urlopen(img_base+image[1]).read())
+				pic.write(urlopen(IMG_BASE+image[1]).read())
 			success=True
 	return success
 
 
 def delete_from_database(manga_id):
 	'''delete manga from database'''
-	con= lite.connect(data_dir+"mangas.db")
+	con= lite.connect(DATA_DIR+"mangas.db")
 	with con:
 		cur=con.cursor()
 		cur.execute("DELETE FROM "+table+" WHERE UniqId=manga_id")
@@ -227,7 +228,7 @@ def table_exists(table_name=None, cur=None ):
 
 def unfollow_manga(manga_id):
 	'''Do not update this manga anymore'''
-	con=lite.connect(data_dir+"mangas.db")
+	con=lite.connect(DATA_DIR+"mangas.db")
 	with con:
 		cur=con.cursor();
 		cur.execute("UPDATE "+table+"  SET Follow= %r WHERE UniqId=%s"%(False, manga_id));
@@ -257,7 +258,7 @@ if __name__ == '__main__':
 	#update_manga_list()
 	
 	"""connect to database and drop table in order to create a new later"""
-	#con=lite.connect(data_dir+"mangas.db")
+	#con=lite.connect(DATA_DIR+"mangas.db")
 	#with con:
 	#	cur=con.cursor();
 	#	cur.execute("DROP TABLE IF EXISTS "+table)
