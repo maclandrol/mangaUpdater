@@ -10,8 +10,34 @@ mangaUpdater
 		* mangaU -s [name] [--bestmatch]
 		* mangaU --search [name] [--bestmatch]
 
-	The name is optionnal. The next screen will ask it.
-	![screenshot 1](https://github.com/maclandrol/mangaUpdater/tests/screenshots/Screenshot from 2015-01-24 03:15:03.png)
+	The name is optionnal. The next screen will ask it if you didn't set it.
+	
+	![screenshot 1](https://raw.githubusercontent.com/maclandrol/mangaUpdater/master/tests/screenshots/Screenshot%20from%202015-01-24%2003:15:03.png)
+	
+	
+	In the following example. we search "naruto"
+	
+	![screenshot 1](https://raw.githubusercontent.com/maclandrol/mangaUpdater/master/tests/screenshots/Screenshot%20from%202015-01-24%2003:15:16.png)
+	
+	
+	Got 3 results, Your screen should display the title and the popularity (*hits*) of those results. Result with higher hits are the bestmatch (you're likely searching for those).
+	
+	
+	![screenshot 1](https://raw.githubusercontent.com/maclandrol/mangaUpdater/master/tests/screenshots/Screenshot%20from%202015-01-24%2003:15:31.png)
+	
+	
+	When you choose your result, another screen with infos and options will be displayed. 
+	Common option are :
+	- **Download** will binge download a manga. (You will specify start and end)
+	- **Save** will save the manga to your database and update new chapter when update is called
+	- **Follow** by default any new added manga is set to follow. 
+	- **Unfollow** if you unfollow a manga, it will be kept in your database but won't be updated 
+	- **Update** update only this manga (not the entire database)
+	- **Delete** delete this crap from my database
+	- **Location** answer to "where the fuck are you saving my downloads ?"
+	- **reddit-RT** Not implemented
+	- **New Search** Perform a new search
+	
 	
 	
 	* ##### Update current search database (could take time!)
