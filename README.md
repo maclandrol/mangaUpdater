@@ -26,17 +26,17 @@ mangaUpdater
 	![screenshot 1](https://raw.githubusercontent.com/maclandrol/mangaUpdater/master/tests/screenshots/Screenshot%20from%202015-01-24%2003:15:31.png)
 	
 	
-	When you choose your result, another screen with infos and options will be displayed. 
+	When you choose your result, another screen with infos and options will be displayed according to the status of the manga (if it's in your database or not ...)
 	Common option are :
-	- **Download** will binge download a manga. (You will specify start and end)
-	- **Save** will save the manga to your database and update new chapter when update is called
-	- **Follow** by default any new added manga is set to follow. 
-	- **Unfollow** if you unfollow a manga, it will be kept in your database but won't be updated 
-	- **Update** update only this manga (not the entire database)
-	- **Delete** delete this crap from my database
-	- **Location** answer to "where the fuck are you saving my downloads ?"
-	- **reddit-RT** Not implemented
-	- **New Search** Perform a new search
+		- **Download** will binge download a manga. (You will specify start and end)
+		- **Save** will save the manga to your database and update new chapter when update is called
+		- **Follow** by default any new added manga is set to follow. 
+		- **Unfollow** if you unfollow a manga, it will be kept in your database but won't be updated 
+		- **Update** update only this manga (not the entire database)
+		- **Delete** delete this crap from my database
+		- **Location** answer to "where the fuck are you saving my downloads ?"
+		- **reddit-RT** Not implemented
+		- **New Search** Perform a new search
 	
 	
 	
@@ -48,8 +48,10 @@ mangaUpdater
 	* ##### Update mangas in the database. Only manga you set to "follow" will be updated. This will download any new chapters and update informations !
 		
 		* mangaU --update
+		
+		You can add this in your crontab file to update your manga every 12h for example. Notification on any new update will be sent by pushbullet if you enable it (I'm not sure if the notification by simple mail is working, I got a network error while testing it, so let me know).
 
-	* ##### Show list actif list of manga
+	* ##### Show list of active manga
 		
 		* mangaU --show
 		* mangaU --t
