@@ -1,7 +1,7 @@
 mangaUpdater
 ============
 
-### Automatic manga downloader and updater. Use the updater with a crontab for better result.
+### Automatic manga downloader and updater using the [mangaeden api](http://www.mangaeden.com/api/). Use the updater with a crontab for better result.
 
 1. #### What can it do ?
 
