@@ -1,0 +1,194 @@
+#!/usr/bin/env python
+
+from src import *
+import argparse
+import sys, os
+from colorama import init, Fore, Back, Style
+init(autoreset=True)
+#API from mangaeden
+GENERAL_OPTIONS = ["Download", "Save", "Follow", "Unfollow", "Update", "Delete", "Location", "reddit-RT", "New Search"]
+LOGO = """                 
+	                                                      $$\   $$\ 
+	                                                      $$ |  $$ |
+	$$$$$$\$$$$\   $$$$$$\  $$$$$$$\   $$$$$$\   $$$$$$\  $$ |  $$ |
+	$$  _$$  _$$\  \____$$\ $$  __$$\ $$  __$$\  \____$$\ $$ |  $$ |
+	$$ / $$ / $$ | $$$$$$$ |$$ |  $$ |$$ /  $$ | $$$$$$$ |$$ |  $$ |
+	$$ | $$ | $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |$$  __$$ |$$ |  $$ |
+	$$ | $$ | $$ |\$$$$$$$ |$$ |  $$ |\$$$$$$$ |\$$$$$$$ |\$$$$$$  |
+	\__| \__| \__| \_______|\__|  \__| \____$$ | \_______| \______/ 
+	                                  $$\   $$ |                    
+	                                  \$$$$$$  |                    
+	                                   \______/                     
+
+"""
+
+class SmartFormatter(argparse.ArgumentDefaultsHelpFormatter):
+
+	def _split_lines(self, text, width):
+		# this is the RawTextHelpFormatter._split_lines
+		if text.startswith('C|'):
+			return text[2:].splitlines()
+		return argparse.ArgumentDefaultsHelpFormatter._split_lines(self, text, width)
+
+
+def screen_update(content):
+	""" Display content, show message, blank screen."""
+	if content is None:
+		os.system('cls' if os.name == 'nt' else 'clear')
+	else:
+		print LOGO
+
+
+parser = argparse.ArgumentParser(description='mangaU is a manga manager that download and manage your mangas.\nUse only one option at times',formatter_class=SmartFormatter)
+parser.add_argument('-U', '--updatelist', action='store_true', dest='updatelist', help="Update your local list or manga used in search")
+parser.add_argument('-u', '--update', dest='updata',  nargs='?', const=1, type=int, help="Update the list of manga your are following")
+parser.add_argument('-s', '--search', dest='search', nargs='?', const=" ", help="Search for a manga and display option about that manga.")
+parser.add_argument('-t', '--show', '--showtable', dest='show',  action="store_true", help="Show the current table contains")
+parser.add_argument('-d', '--droptable', action="store_true", dest='drop', help="Drop your list of  for a manga and display option about that manga.")
+parser.add_argument('-a', '--add', type=argparse.FileType('r'), dest='add', help="Batch adding mangas from a txt file. One manga per line in the file.")
+parser.add_argument('--bestmatch', action="store_true", dest='bestmatch', help="Use bestmatch for search.")
+
+args= parser.parse_args()
+
+if(args.updatelist):
+	update_manga_list()
+
+if(args.add):
+	screen_update(True)
+	manga_list = [line.strip() for line in args.add.readlines()]
+	add_manga_list(manga_list, True)
+
+elif(args.updata):
+	update_manga(get_current_chap=args.updata)
+
+elif(args.search):
+	screen_update(True)
+
+	entername = Fore.GREEN +"Enter manga name : " 
+	resultfor = Fore.WHITE + Back.BLACK + Style.BRIGHT + "\nYou searched " 
+	bestmatch = args.bestmatch
+	name = args.search.strip()
+	new_search = True
+
+	while new_search:
+		if(not name):
+			name = raw_input(entername)
+
+		output = search_manga(name, bestmatch)
+		n_result = len(output)
+		print resultfor+name+"..."
+		print
+		# Reset name to none value
+		name = None
+		new_search = False
+		if n_result<1:
+			sys.exit("Results not found for your search.")
+
+		for i, manga in enumerate(output):
+			print  Fore.RED+"[%s]"%(i+1),  "Title : {:<45}\tHits : {:>12}".format(manga[u"t"].encode('ascii', 'ignore'), manga["h"])
+
+		manga_number = int(raw_input("\nEnter your choice : "))
+		
+		while (manga_number<1 or manga_number > n_result):
+			manga_number = int(raw_input('\033[1A'+'\033[K'+"Hidoi-naa, %s is not a valid choice, pls enter again : "%manga_number))
+
+		manga_number -= 1
+		#Here the manga to search is found
+		manga_id = output[manga_number][u'i']
+		searched_manga = get_manga_info(manga_id)
+		manga_title = searched_manga[1]
+		location = BASE_DIR+manga_title+"/"
+		screen_update(None)
+		print Fore.BLUE+Style.BRIGHT+"Title:", manga_title
+		print Fore.BLUE+Style.BRIGHT+"Author:", searched_manga[2]
+		print Fore.BLUE+Style.BRIGHT+"Artist:", searched_manga[3]
+		if(searched_manga[5]):
+			print Fore.BLUE+Style.BRIGHT+"Years: ", searched_manga[5], "\t"
+
+		if(searched_manga[8]):
+			print Fore.BLUE+Style.BRIGHT+"Last chapter: ", searched_manga[8], "\t",
+		
+		if(searched_manga[9]):
+			print Fore.BLUE+Style.BRIGHT+"Total chapter: ", searched_manga[9], "\t",
+		
+		if(searched_manga[4]):
+			print "\n"+Fore.BLUE+Style.BRIGHT+"Summary: ", searched_manga[4].encode('ascii', 'ignore')
+
+		print Fore.BLACK+Style.BRIGHT+"Source : http://www.mangaeden.com/"+"\n"
+
+		# Now we print the choice left to the user
+		manga_exist, manga_followed = exists_in_table(manga_id)
+		user_option = [0,8]
+		if(manga_exist): 
+			user_option.extend([4, 5, 6])
+			if(manga_followed): 
+				user_option.append(3)
+			else:
+				user_option.append(2)
+		else :
+			user_option.append(1)
+
+		if(REDDIT_IS_SETUP):
+			user_option.append(7)
+
+		for option in user_option:
+			print Fore.RED+Style.BRIGHT+"[%s] "%(option+1),
+			print Fore.WHITE+GENERAL_OPTIONS[option], "\t", 
+		
+		print "\n"
+		chosen_option = int(raw_input("Master, pls choose an option : "))
+		while (chosen_option-1 not in user_option):
+			chosen_option = int(raw_input('\033[1A'+'\033[K'+"Nanda kore ?, choose again: "))
+
+		if(chosen_option==9):
+			new_search = True
+			screen_update(None)
+		
+		elif(chosen_option==1):
+			chapters = raw_input("Enter chapters to download (start:end+1): ")
+			chapters = [int(x) for x in chapters.strip().split(':')]
+			start = min(chapters)
+			end = max(chapters)
+			download_manga(manga_id, location, chap_start=start, chap_end=end)
+
+
+		elif(chosen_option==2):
+			add_manga(manga_info = searched_manga, manga_id=manga_id)
+			print searched_manga[1], "Added !"
+
+		elif(chosen_option in [3,4]):
+			update_follow_manga(manga_id, chosen_option==3)
+
+		elif (chosen_option==5):
+			update_manga(manga_id=manga_id, get_current_chap=1)
+			print "Senpai, %s was updated!"%(manga_title)
+
+		elif (chosen_option==6):
+			delete_from_database(manga_id)
+			print "Senpai, %s was deleted!"%(manga_title)
+
+		elif(chosen_option==7):
+			print location
+
+		elif(chosen_option==8 and REDDIT_IS_SETUP):
+			raise NotImplementedError("Not doing this right now... Why? Fuck you!")
+
+
+elif(args.drop):
+	drop_table()
+
+
+elif(args.show):
+	result = current_table()
+	header = ["Title", "Author", "Years", "Last Chapter", "Fol", "Last Update"]
+	if(result):
+		layout = "{: <20} | {: >15} | {: >5} | {: >12} | {: >3} | {: >10}"
+		screen_update(None)
+		screen_update(True)
+		print Fore.GREEN+Style.BRIGHT+layout.format(*header)
+		print Fore.GREEN+Style.BRIGHT+"-----------------------------------------------------------------------------------"
+		for r in result:
+			print layout.format(*r), "\n"
+
+	else:
+		print "Nothing here right now, you should add manga before running this, baka!"

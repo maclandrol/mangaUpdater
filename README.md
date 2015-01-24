@@ -3,59 +3,50 @@ mangaUpdater
 
 ### Automatic manga downloader and updater. Work better with a scheduler like crontab for manga updating.
 
-1. #### Basics functions
+2. #### Basics functions
 
-	* ##### Search a manga by name (**search_manga**) 
+	* ##### Search a manga by name
 		
-		* Optional argument: best_match. If best_match is set to 1, only the manga with the best hit is returned (use it with popular manga)
+		* mangaU -s [name] [--bestmatch]
+		* mangaU --search [name] [--bestmatch]
 
-	* ##### Get a manga info using a manga_id obtained with search manga (**get_manga_info**)
-		
-		* example: get_manga_info
-
-	* ##### Update/Create if not exists my local manga list (**update_manga_list**). This could take some time!
-		
-		* Save manga_list to base_dir
-
-	* ##### Get a chapter id for a manga (**get_manga_chapter_id**)
-		
-		* Required argument: manga_id
-		* Optional argument: chapter. If chapter is set to None, the last chapter id is returned else, the id of the chapter is returned
-		* Return chapter id or None
-
-	* ##### Get chapter infos (**get_chapter_info**)
-		
-		* Required argument: chapter_id
-		* Return a json object that contains chapter data (images)
-
-	* ##### Save chapter to directory (**save_chapter_to**)
-
-		* Required argument: dir_name (destination base directory)
-		* Required argument: chapter_json (see **get_chapter_info**)
-
-	* ##### Download manga chapter from chap_start to chap_end (**download_manga**)
-
-		* Required argument: manga_id
-		* Required argument: manga_base_dir
-		* Optional argument: chap_start (set to 1 by default)
-		* Optional argument: chap_end (set to None by default, chapters are then from chap_start to latest release)
-
-2. #### Database related functions
+	The name is optionnal. The next screen will ask it.
 	
-	* ##### Add manga to my database for automatic update (**add_manga**)
+
+	* ##### Update current search database (could take time!)
 		
-		* Require manga_info and/or manga_id
+		* mangaU -U
+		* mangaU --updatelist
 
-	* ##### Add list of manga to database (**add_manga_list**)
+	* ##### Update mangas in the database. Only manga you set to "follow" will be updated. This will download any new chapters and update informations !
+		
+		* mangaU --update
 
-		* Required argument: list of manga name. If the manga is found with **search_manga**, it'll be add to the database, else it'll be skipped
+	* ##### Show list actif list of manga
+		
+		* mangaU --show
+		* mangaU --t
+		
+		This show the mangas in your database and their status.
 
-	* ##### Unfollow manga (**unfollow_manga**). By default, any mangas added to the database will be automatically updated when **update_manga** is called. Execute **unfollow_manga** to discard the manga.
+	* ##### Drop everything
+		
+		* mangaU --droptable
+		* mangaU -d
 
-		* Required argument: manga_id
+		Drop every mangas in the database. If you call `mangaU -t` you shouldn't see anything.
 
-	* ##### Update manga (**update_manga**). Automatically update any manga in the database, save the chapter to the corresponding manga directory ("*path_to_manga_dir/Manga_Title/Chapter_Num/*" and notify me if new releases are found!
+	* ##### Batch add of manga by title
 
-		* Argument: manga_id (default value is None), if not None, only update selected manga
-		* Argument: get_current_chap (default value is 0). If set to 1, retrieve current latest chapter and save to "*path_to_manga_dir/Manga_Title/latest*"
-		* Argument: notify. Function for notification; By default sendmail!
+		* mangaU --add filename
+		* mangaU -a filename
+
+		Search and add manga from filename into your database (one manga title per line). The bestmatch will be used. When there is no match, the manga will be skipped.
+
+2. #### Installation
+
+Clone the github repository or download the tarball. Then run
+`python setup.py install`
+
+
+3. #### Requirement
