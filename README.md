@@ -13,12 +13,6 @@ mangaUpdater
 	The name is optionnal. The next screen will ask it.
 	
 	
-<<<<<<< HEAD
-=======
-	
-	
->>>>>>> 3e96a555c1039c337590e46d7211243ce7634395
-
 	* ##### Update current search database (could take time!)
 		
 		* mangaU -U
@@ -51,30 +45,19 @@ mangaUpdater
 
 2. #### Installation
 
-<<<<<<< HEAD
 	Clone the github repository or download the tarball. Then run `python setup.py install`.
-=======
-	Clone the github repository or download the tarball. Then run `python setup.py install`
->>>>>>> 3e96a555c1039c337590e46d7211243ce7634395
 
 3. #### Parameters
 
 	Setup your parameters in the parameters.py file. The default parameters are already ok.
 If you use pushbullet, setup your device name and your api-key in order to enable notification by pushbullet when your manga database is updated.
 
-<<<<<<< HEAD
-4. #### Requirements
-=======
+
 4. #### Requirement
->>>>>>> 3e96a555c1039c337590e46d7211243ce7634395
 
 	This script use the following library :
 
 	- colorama
 	- requests
 	- json
-<<<<<<< HEAD
 	- sqlite3
-=======
-	- sqlite3
->>>>>>> 3e96a555c1039c337590e46d7211243ce7634395
