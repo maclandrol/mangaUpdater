@@ -69,7 +69,7 @@ mangaUpdater
 
 3. #### Parameters
 
-  Setup your parameters in the parameters.py file. The default parameters are already ok.
+  Setup your parameters in the _**parameters.py**_ file. The default parameters are already ok and it's really straight forward.
   If you use pushbullet, setup your device name and your api-key in order to enable notification by pushbullet when your manga database is updated.
 
 
