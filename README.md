@@ -13,6 +13,8 @@ mangaUpdater
 	The name is optionnal. The next screen will ask it.
 	
 	
+	
+	
 
 	* ##### Update current search database (could take time!)
 		
