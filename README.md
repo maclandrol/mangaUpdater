@@ -48,19 +48,18 @@ mangaUpdater
 
 2. #### Installation
 
-Clone the github repository or download the tarball. Then run
-`python setup.py install`
+	Clone the github repository or download the tarball. Then run `python setup.py install`
 
 3. #### Parameters
 
-Setup your parameters in the parameters.py file. The default parameters are already ok.
+	Setup your parameters in the parameters.py file. The default parameters are already ok.
 If you use pushbullet, setup your device name and your api-key in order to enable notification by pushbullet when your manga database is updated.
 
 4. #### Requirement
 
-This script use the following library :
+	This script use the following library :
 
-- colorama
-- requests
-- json
-- sqlite3
+	- colorama
+	- requests
+	- json
+	- sqlite3
