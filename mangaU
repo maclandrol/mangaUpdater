@@ -48,7 +48,12 @@ parser.add_argument('-d', '--droptable', action="store_true", dest='drop', help=
 parser.add_argument('-a', '--add', type=argparse.FileType('r'), dest='add', help="Batch adding mangas from a txt file. One manga per line in the file.")
 parser.add_argument('--bestmatch', action="store_true", dest='bestmatch', help="Use bestmatch for search.")
 
+if len(sys.argv)==1 :
+	parser.print_help()
+	sys.exit(1)
+
 args= parser.parse_args()
+
 
 if(args.updatelist):
 	update_manga_list()

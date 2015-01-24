@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-from distutils.core import setup
+import setuptools
 import os, sys
 
 sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), "python")))
 
 
-setup(
+setuptools.setup(
 	name="mangaU",
 	version='1.0',
 	description="Manga manager and downloader using MangaEden api (https://www.mangaeden.com)",
@@ -34,7 +34,7 @@ setup(
 	install_requires=[
 		'requests',
 		'colorama',
-		'sqlite3'
+		'pysqlite'
 	],
 	long_description="""\
 
