@@ -11,6 +11,7 @@ mangaUpdater
 		* mangaU --search [name] [--bestmatch]
 
 	The name is optionnal. The next screen will ask it.
+	![screenshot 1](https://github.com/maclandrol/mangaUpdater/tests/screenshots/Screenshot from 2015-01-24 03:15:03.png)
 	
 	
 	* ##### Update current search database (could take time!)
