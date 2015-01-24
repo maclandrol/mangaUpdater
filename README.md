@@ -1,9 +1,9 @@
 mangaUpdater
 ============
 
-### Automatic manga downloader and updater. Work better with a scheduler like crontab for manga updating.
+### Automatic manga downloader and updater. Use the updater with a crontab for better result.
 
-2. #### Basics functions
+1. #### What can it do ?
 
 	* ##### Search a manga by name
 		
@@ -11,6 +11,7 @@ mangaUpdater
 		* mangaU --search [name] [--bestmatch]
 
 	The name is optionnal. The next screen will ask it.
+	
 	
 
 	* ##### Update current search database (could take time!)
@@ -45,8 +46,18 @@ mangaUpdater
 
 2. #### Installation
 
-Clone the github repository or download the tarball. Then run
-`python setup.py install`
+	Clone the github repository or download the tarball. Then run `python setup.py install`.
 
+3. #### Parameters
 
-3. #### Requirement
+	Setup your parameters in the parameters.py file. The default parameters are already ok.
+If you use pushbullet, setup your device name and your api-key in order to enable notification by pushbullet when your manga database is updated.
+
+4. #### Requirements
+
+	This script use the following library :
+
+	- colorama
+	- requests
+	- json
+	- sqlite3
